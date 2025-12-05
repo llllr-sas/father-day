@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สุขสันต์วันพ่อแห่งชาติ - Father's Day</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        'royal-blue': '#0f172a',
+                        'luxury-gold': '#d4af37',
+                        'gold-light': '#f3e5ab',
+                        'gold-dark': '#aa8c2c',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 3s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, visibility;
+        }
+        
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(to right, #fbf5b7, #bf953f, #b38728, #fbf5b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .fade-img {
+            transition: opacity 1s ease-in-out;
+        }
+
+        .gold-glow-bar {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #FFD700, #FFF, #FFD700, transparent);
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+            border-radius: 100%;
+            box-shadow: 0 0 10px #FFD700, 0 0 20px #aa8c2c;
+        }
+
+        /* --- 2. Full Screen Floating Hearts (Ambient) --- */
+        .particle {
+            position: fixed;
+            bottom: -50px;
+            pointer-events: none;
+            z-index: 5; /* อยู่หลังเนื้อหาหลักแต่อยู่หน้า background */
+            animation: floatUp linear forwards;
+            opacity: 0.7;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            100% {
+                transform: translateY(-110vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        #loading-screen {
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+        #loading-screen.hidden-loader {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* --- 1. & 5. Blessing Pop & Gold Burst --- */
+        .blessing-animate {
+            animation: blessingPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+        }
+        
+        @keyframes blessingPop {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.6) translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) translateY(0);
+            }
+        }
+
+        /* Effect ระเบิดแสงทอง */
+        .gold-burst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+            animation: burstEffect 0.8s ease-out forwards;
+            z-index: -1;
+        }
+
+        @keyframes burstEffect {
+            0% {
+                width: 0;
+                height: 0;
+                box-shadow: 0 0 10px 10px rgba(255, 215, 0, 0.8), 0 0 20px 20px rgba(255, 223, 0, 0.4);
+                opacity: 1;
+            }
+            100% {
+                width: 500px;
+                height: 500px;
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+                opacity: 0;
+            }
+        }
+
+        /* Cursor สำหรับ Typewriter */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: #FFD700;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- Audio Element (Hidden) -->
+    <audio id="magicSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+
+    <div id="loading-screen" class="fixed inset-0 z-[100] bg-royal-blue flex flex-col items-center justify-center text-center">
+        <div class="relative">
+            <i data-lucide="heart" class="w-16 h-16 text-yellow-500 fill-current animate-spin-slow"></i>
+            <i data-lucide="heart" class="w-8 h-8 text-white fill-current absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse"></i>
+        </div>
+        <p class="mt-6 text-xl text-yellow-400 font-light tracking-widest animate-pulse">กำลังโหลดความรัก...</p>
+    </div>
+
+    <div class="w-full bg-slate-900 border-b border-yellow-600/50 py-2 text-center relative z-40">
+        <p class="text-yellow-500 text-xs md:text-sm tracking-widest font-light uppercase flex items-center justify-center gap-2">
+            <span class="w-8 h-[1px] bg-yellow-600 inline-block"></span>
+            วันพ่อแห่งชาติ ๕ ธันวาคม ๒๕๖๘
+            <span class="w-8 h-[1px] bg-yellow-600 inline-block"></span>
+        </p>
+    </div>
+
+    <!-- 1. Hero Section -->
+    <header class="relative w-full h-[calc(100vh-40px)] min-h-[600px] flex items-center justify-center bg-royal-blue overflow-hidden"
+            style="background-image: url('image/f3.jpg'); background-size: cover; background-position: center;">
+        
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-slate-900/80 to-black/80"></div>
+        <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/binding-dark.png');"></div>
+
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
+            
+            <div class="mb-6 group">
+                <img id="autoImage"
+                     src="image/f1.jpg"
+                     onerror="this.style.display='none'; document.getElementById('fallback-icon').style.display='block';"
+                     class="w-40 h-40 object-cover rounded-full border-4 border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.6)] mx-auto transition-all duration-700 opacity-100 fade-img hover:scale-105">
+                
+                <div id="fallback-icon" style="display:none;" class="animate-pulse">
+                    <i data-lucide="crown" class="w-16 h-16 text-yellow-400 mx-auto"></i>
+                </div>
+            </div>
+            
+            <!-- ✅ 3. Typewriter Effect H1 -->
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-2 tracking-wide text-gold-gradient leading-tight drop-shadow-lg min-h-[1.2em]">
+                <span id="typewriter-line1"></span>
+                <br class="md:hidden" />
+                <span id="typewriter-line2"></span>
+            </h1>
+            
+            <div class="w-48 md:w-96 gold-glow-bar mb-8 mx-auto"></div>
+            
+            <p class="text-blue-100 text-lg md:text-2xl font-light mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+                "ขอให้พ่อสุขภาพแข็งแรงไม่เจ็บไม่ป่วย ร่ำๆรวยๆ <br class="hidden md:block"/> และอยู่กับ พี่อ้อม, สาธุ, ภูผา ไปนานๆ นะครับ"
+            </p>
+
+            <!-- ปุ่ม: สุ่มคำอวยพร -->
+            <button onclick="generateRandomWish()" class="group relative px-8 py-4 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-full text-blue-900 font-bold text-lg shadow-[0_0_20px_rgba(234,179,8,0.5)] hover:shadow-[0_0_30px_rgba(234,179,8,0.8)] transition-all transform hover:-translate-y-1 active:scale-95">
+                <span class="flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-6 h-6 fill-current animate-pulse"></i>
+                    สุ่มคำอวยพรให้พ่อ
+                </span>
+            </button>
+        </div>
+
+        <div class="absolute bottom-10 animate-bounce">
+            <i data-lucide="chevron-down" class="w-8 h-8 text-yellow-400/70"></i>
+        </div>
+    </header>
+
+    <section class="relative z-20 -mt-20 px-4 mb-20">
+        <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-8 md:p-12 text-center border-t-4 border-yellow-400 fade-in-section">
+            
+            <img src="image/f2.png" 
+                 onerror="this.style.display='none'"
+                 class="w-32 h-32 mx-auto rounded-full shadow-md mb-6 object-cover border-2 border-yellow-200">
+
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-1 bg-yellow-400 rounded-full"></div>
+            </div>
+            <h2 class="text-3xl font-bold text-blue-900 mb-6">ถึง พ่อที่รัก</h2>
+            
+            <div class="relative h-48 flex items-center justify-center overflow-hidden">
+                <div class="greeting-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 opacity-100" id="slide-0">
+                    <p class="text-gray-600 text-lg md:text-xl leading-loose italic">
+                        "ขอบคุณพ่อที่คอยดูแลและสั่งสอนลูกเสมอมา <br> 
+                        แม้ในวันที่เหนื่อยล้า พ่อก็ยังเป็นกำลังใจสำคัญที่สุด <br>
+                        รักพ่อที่สุดในโลกครับ/ค่ะ"
+                    </p>
+                </div>
+
+                <div class="greeting-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 opacity-0" id="slide-1">
+                    <p class="text-gray-600 text-lg md:text-xl leading-loose italic">
+                        "ขอให้พ่อสุขภาพแข็งแรงนะครับไม่เจ็บไม่ป่วย <br>
+                        ขอบคุณที่ดูแลผม และจ่ายค่าใช้จ่ายต่างๆ ให้ <br>
+                        ขอบคุณมากนะครับ"
+                    </p>
+                    <p class="text-blue-800 font-bold mt-4 text-lg">- จาก สาธุ -</p>
+                </div>
+
+                <div class="greeting-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 opacity-0" id="slide-2">
+                    <p class="text-gray-600 text-lg md:text-xl leading-loose italic">
+                        "ขอให้พ่อสุขภาพแข็งแรง ไม่เจ็บไม่ป่วย <br>
+                        ร่ำๆ รวยๆ นะครับ"
+                    </p>
+                    <p class="text-blue-800 font-bold mt-4 text-lg">- จาก ภูผา -</p>
+                </div>
+            </div>
+
+            <div class="mt-4 flex justify-center gap-2">
+                <span class="dot-indicator w-2 h-2 rounded-full bg-blue-400 transition-colors duration-300" id="dot-0"></span>
+                <span class="dot-indicator w-2 h-2 rounded-full bg-blue-200 transition-colors duration-300" id="dot-1"></span>
+                <span class="dot-indicator w-2 h-2 rounded-full bg-blue-200 transition-colors duration-300" id="dot-2"></span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 text-white pt-16 pb-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="w-full h-px bg-white/10 max-w-xs mx-auto mb-8"></div>
+            <p class="text-slate-400 font-light text-sm">
+                &copy; 2024-2025 Father's Day Greeting Website. <br>
+                Created with <i data-lucide="heart" class="inline w-3 h-3 text-red-500 fill-current"></i> for Dad.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // --- Data: 108 Wishes ---
+        const wishes108 = [
+            "ขอให้พ่อมีความสุข สุขภาพแข็งแรงตลอดปีตลอดไปครับ", "รักพ่อที่สุดในโลก ขอบคุณที่ดูแลลูกมาตลอดครับ", "พ่อคือฮีโร่ในดวงใจของลูกเสมอ", "ขอให้พ่ออายุยืนหมื่นปี ไม่มีโรคภัยไข้เจ็บ", "ขอบคุณพ่อที่ทำงานหนักเพื่อครอบครัวมาเสมอนะครับ",
+            "ขอให้พ่อรวยๆ เฮงๆ เงินทองไหลมาเทมาครับ", "พ่อหล่อที่สุดในโลก รักพ่อมากๆ ครับ", "ขอบคุณที่พ่อคอยสอนให้ลูกเป็นคนดี", "ขอให้พ่อมีความสุขในทุกๆ วัน ไม่ใช่แค่วันพ่อ", "สัญญาจะเป็นเด็กดีของพ่อตลอดไปครับ",
+            "สุขภาพแข็งแรง อยู่เป็นร่มโพธิ์ร่มไทรให้ลูกหลานนานๆ นะครับ", "รักพ่อครับ ขอบคุณที่เข้าใจลูกเสมอ", "พ่อคือซูเปอร์แมนของบ้านเรา", "ขอให้สิ่งศักดิ์สิทธิ์คุ้มครองพ่อให้ปลอดภัยแคล้วคลาด", "ขอให้พ่อสมหวังในทุกสิ่งที่ปรารถนานะครับ",
+            "ขอบคุณรอยยิ้มของพ่อที่เป็นกำลังใจให้ลูกเสมอ", "รักพ่อไม่มีวันเปลี่ยนแปลงครับ", "พ่อเหนื่อยมาเยอะแล้ว พักผ่อนบ้างนะครับ", "ขอให้พ่อสุขภาพดี แข็งแรงเหมือนหนุ่มๆ เลยนะครับ", "ดีใจที่ได้เกิดเป็นลูกพ่อครับ",
+            "ขอให้พ่อมีความสุขกาย สบายใจ หายห่วงทุกเรื่องครับ", "พ่อคือผู้ให้ที่ยิ่งใหญ่ที่สุดของลูก", "ขอบคุณอ้อมกอดที่อบอุ่นของพ่อเสมอมา", "ขอให้พ่ออายุยืน อยู่กับลูกไปนานแสนนาน", "รักพ่อมากกว่าที่พูดนะครับ",
+            "ขอให้พ่อถูกหวยรวยเบอร์ มีโชคมีลาภครับ", "ขอให้พ่อแข็งแรง เดินเหินคล่องแคล่ว", "พ่อคือแรงบันดาลใจในการใช้ชีวิตของลูก", "ขอบคุณที่พ่อคอยสนับสนุนลูกในทุกๆ เรื่องครับ", "ขอให้พ่อมีความสุขกับสิ่งที่พ่อรักนะครับ",
+            "รักพ่อครับ ขอบคุณที่เลี้ยงดูมาอย่างดี", "ขอให้พ่อเป็นหนุ่มหล่อตลอดกาลครับ", "ขอให้พ่อสุขภาพแข็งแรง โรคภัยอย่าได้เบียดเบียน", "พ่อคือที่พึ่งทางใจของลูกเสมอ", "ขอบคุณที่พ่ออดทนเพื่อครอบครัวเรามาตลอด",
+            "ขอให้พ่อมีความสุข สดชื่น แจ่มใส เบิกบานใจครับ", "รักพ่อที่สุด ขอบคุณที่เป็นพ่อที่น่ารักของลูก", "พ่อเก่งที่สุดในโลกสำหรับลูกเลยครับ", "ขอให้พ่อมีแต่รอยยิ้มและเสียงหัวเราะ", "สัญญาจะตั้งใจเรียน/ทำงาน ให้พ่อภูมิใจครับ",
+            "ขอให้พ่ออายุยืน สุขภาพดี ไม่มีโรคภัย", "รักพ่อครับ จะดูแลพ่อให้ดีที่สุด", "พ่อคือทุกสิ่งทุกอย่างของลูก", "ขอบคุณความรักความเมตตาที่พ่อมีให้ลูกเสมอ", "ขอให้พ่อมีความสุขมากๆ นะครับ สุขสันต์วันพ่อ",
+            "ขอให้พ่อสุขภาพแข็งแรง เป็นร่มโพธิ์ร่มไทรให้ลูกหลาน", "รักพ่อครับ ขอบคุณที่สอนให้ลูกเข้มแข็ง", "พ่อคือแบบอย่างที่ดีที่สุดของลูก", "ขอให้พ่อมีความสุขกับชีวิตวัยเกษียณนะครับ", "ขอให้พ่อมีแต่เรื่องดีๆ เข้ามาในชีวิต",
+            "ขอบคุณที่พ่ออยู่เคียงข้างลูกเสมอมา", "รักพ่อมากครับ ขอให้พ่อสุขภาพแข็งแรง", "พ่อคือแสงสว่างนำทางชีวิตลูก", "ขอให้พ่ออายุยืนหมื่นปี สุขภาพดีตลอดไป", "ขอบคุณความเสียสละของพ่อครับ",
+            "ขอให้พ่อมีความสุขกาย สบายใจ ไร้โรคา", "รักพ่อที่สุดในสามโลกครับ", "พ่อคือคนเก่งที่ลูกภูมิใจเสมอ", "ขอให้พ่อสุขภาพแข็งแรง อยู่ดูความสำเร็จของลูกไปนานๆ", "ขอบคุณที่พ่อมอบสิ่งดีๆ ให้ลูกเสมอมา",
+            "ขอให้พ่อมีความสุข สดชื่น สมหวังทุกประการ", "รักพ่อครับ จะเป็นคนดีของพ่อตลอดไป", "พ่อคือความอบอุ่นของหัวใจลูก", "ขอให้พ่อมีสุขภาพแข็งแรง ปราศจากโรคภัยไข้เจ็บ", "ขอบคุณที่พ่อรักและห่วงใยลูกเสมอ",
+            "ขอให้พ่อมีความสุขในวันพ่อและทุกๆ วันครับ", "รักพ่อมากครับ ขอบคุณที่เป็นพ่อที่ดีที่สุด", "พ่อคือฮีโร่ตัวจริงของลูก", "ขอให้พ่ออายุยืน อยู่เป็นขวัญและกำลังใจให้ลูกหลาน", "ขอบคุณที่พ่อทุ่มเทเพื่อลูกมาตลอดชีวิต",
+            "ขอให้พ่อมีความสุข สุขภาพดี มีเงินใช้ไม่ขาดมือ", "รักพ่อครับ สัญญาจะดูแลพ่อให้ดีที่สุด", "พ่อคือผู้ชายที่ลูกรักที่สุดในโลก", "ขอให้พ่อแข็งแรง กระฉับกระเฉง สดใสทุกวัน", "ขอบคุณคำสอนของพ่อที่ทำให้ลูกมีวันนี้",
+            "ขอให้พ่อมีความสุขกาย สุขใจ ตลอดปีครับ", "รักพ่อที่สุด ขอบคุณที่ทำให้ลูกเกิดมา", "พ่อคือที่สุดของความรักและความผูกพัน", "ขอให้พ่อสุขภาพดี ไม่มีโรคภัยมากล้ำกราย", "ขอบคุณที่พ่อเป็นแบบอย่างที่ดีให้ลูกเสมอ",
+            "ขอให้พ่อมีความสุข เงินทองไหลมาเทมา", "รักพ่อครับ จะตั้งใจทำหน้าที่ลูกให้ดีที่สุด", "พ่อคือคนสำคัญที่สุดในชีวิตลูก", "ขอให้พ่ออายุยืน สุขภาพแข็งแรงตลอดไป", "ขอบคุณความรักอันยิ่งใหญ่ของพ่อครับ",
+            "ขอให้พ่อมีความสุข สดใส แข็งแรง", "รักพ่อมากครับ พ่อคือดวงใจของลูก", "พ่อคือผู้ให้ชีวิตและลมหายใจของลูก", "ขอให้พ่อมีความสุขกับทุกๆ วันในชีวิต", "ขอบคุณที่พ่อคอยปกป้องดูแลลูกเสมอมา",
+            "ขอให้พ่อสุขภาพดี มีแรงทำกิจกรรมที่ชอบ", "รักพ่อที่สุดในจักรวาลครับ", "พ่อคือความภูมิใจของลูกเสมอ", "ขอให้พ่อมีความสุขกาย สบายใจ ไร้ทุกข์โศก", "ขอบคุณที่พ่อเป็นพ่อที่น่ารักที่สุดในโลก",
+            "ขอให้พ่อรวยความสุข รวยสุขภาพ รวยเงินทอง", "รักพ่อครับ ขอให้พ่ออยู่กับลูกไปนานๆ", "พ่อคือของขวัญล้ำค่าที่สุดของลูก", "ขอให้พ่อมีความสุข สุขภาพแข็งแรง ยิ้มได้ทุกวัน", "ขอบคุณทุกสิ่งที่พ่อทำให้ลูกครับ รักพ่อที่สุด"
+        ];
+        
+        // --- 5. Random Icons for Wish Popup ---
+        const wishIcons = [
+            { icon: 'crown', color: 'text-yellow-500' },
+            { icon: 'heart', color: 'text-red-500' },
+            { icon: 'star', color: 'text-yellow-400' },
+            { icon: 'trophy', color: 'text-orange-400' },
+            { icon: 'gift', color: 'text-pink-500' },
+            { icon: 'thumbs-up', color: 'text-blue-500' }
+        ];
+
+        window.addEventListener('load', () => {
+            // Loading Screen
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.classList.add('hidden-loader');
+                setTimeout(() => { loader.style.display = 'none'; }, 800);
+                
+                // Start Typewriter after loading
+                startTypewriter();
+            }, 2000); 
+
+            // Start Floating Hearts Background
+            setInterval(createAmbientHeart, 1200); // Create heart every 1.2s
+        });
+
+        // --- 3. Typewriter Effect ---
+        function startTypewriter() {
+            const line1 = "สุขสันต์";
+            const line2 = "วันพ่อแห่งชาติ";
+            const el1 = document.getElementById('typewriter-line1');
+            const el2 = document.getElementById('typewriter-line2');
+            
+            el1.classList.add('typing-cursor');
+            
+            let i = 0;
+            const typeLine1 = setInterval(() => {
+                el1.textContent += line1.charAt(i);
+                i++;
+                if (i >= line1.length) {
+                    clearInterval(typeLine1);
+                    el1.classList.remove('typing-cursor');
+                    el2.classList.add('typing-cursor');
+                    
+                    let j = 0;
+                    const typeLine2 = setInterval(() => {
+                        el2.textContent += line2.charAt(j);
+                        j++;
+                        if (j >= line2.length) {
+                            clearInterval(typeLine2);
+                            el2.classList.remove('typing-cursor');
+                        }
+                    }, 100); // Speed for line 2
+                }
+            }, 100); // Speed for line 1
+        }
+
+        // --- 4. Sound Effect Helper ---
+        function playTingSound() {
+            const audio = document.getElementById('magicSound');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log("Audio play blocked (user didn't interact yet)"));
+            }
+        }
+
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // --- ✅ Enhanced Random Wish Function ---
+        function generateRandomWish() {
+            // Play Sound
+            playTingSound();
+
+            const existingPopup = document.getElementById('temp-wish-popup');
+            if(existingPopup) existingPopup.remove();
+
+            const randomWishText = wishes108[Math.floor(Math.random() * wishes108.length)];
+            const randomIconData = wishIcons[Math.floor(Math.random() * wishIcons.length)];
+            
+            const popup = document.createElement('div');
+            popup.id = 'temp-wish-popup';
+            
+            // ใช้ class blessing-animate 
+            popup.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white/95 backdrop-blur-sm p-8 rounded-3xl shadow-[0_0_50px_rgba(234,179,8,0.5)] border-4 border-yellow-400 text-center max-w-md w-[90%] blessing-animate overflow-hidden';
+            
+            popup.innerHTML = `
+                <!-- Gold Burst Background -->
+                <div class="gold-burst"></div>
+                
+                <!-- Random Icon -->
+                <div class="mb-4 animate-bounce flex justify-center">
+                    <i data-lucide="${randomIconData.icon}" class="w-16 h-16 ${randomIconData.color} fill-current drop-shadow-lg"></i>
+                </div>
+                
+                <h3 class="text-xl font-bold text-yellow-600 mb-2">คำอวยพรถึงพ่อ</h3>
+                <p class="text-2xl text-blue-900 font-medium leading-relaxed drop-shadow-sm">
+                    "${randomWishText}"
+                </p>
+            `;
+
+            document.body.appendChild(popup);
+            
+            // Re-initialize icons for the new popup
+            lucide.createIcons();
+            
+            // Pop effect particles
+            for(let i=0; i<8; i++) {
+                setTimeout(createFloatingHeart, i * 150);
+            }
+
+            setTimeout(() => {
+                if(popup) {
+                    popup.style.transition = "all 0.5s ease";
+                    popup.style.opacity = "0";
+                    popup.style.transform = "translate(-50%, -60%) scale(0.9)";
+                    setTimeout(() => popup.remove(), 500); 
+                }
+            }, 5000);
+        }
+
+        let currentSlide = 0;
+        const totalSlides = 3;
+        function rotateGreetings() {
+            document.getElementById(`slide-${currentSlide}`).classList.remove('opacity-100');
+            document.getElementById(`slide-${currentSlide}`).classList.add('opacity-0');
+            document.getElementById(`dot-${currentSlide}`).classList.replace('bg-blue-400', 'bg-blue-200');
+
+            currentSlide = (currentSlide + 1) % totalSlides;
+
+            document.getElementById(`slide-${currentSlide}`).classList.remove('opacity-0');
+            document.getElementById(`slide-${currentSlide}`).classList.add('opacity-100');
+            document.getElementById(`dot-${currentSlide}`).classList.replace('bg-blue-200', 'bg-blue-400');
+        }
+        setInterval(rotateGreetings, 5000);
+
+        const images = ["image/f1.jpg", "image/f2.jpg", "image/f3.jpg", "image/f4.jpg"];
+        let imgIndex = 0;
+        const imgElement = document.getElementById("autoImage");
+
+        function changeHeaderImage() {
+            if (!imgElement) return;
+            imgElement.classList.add("opacity-0");
+            setTimeout(() => {
+                imgIndex = (imgIndex + 1) % images.length;
+                imgElement.src = images[imgIndex];
+                imgElement.classList.remove("opacity-0");
+            }, 600);
+        }
+        if (imgElement) {
+            imgElement.classList.add("fade-img");
+            setInterval(changeHeaderImage, 4000);
+        }
+
+        // --- 2. Ambient Floating Hearts (Full Screen) ---
+        function createAmbientHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('particle');
+            heart.innerHTML = '💛'; 
+            
+            const size = Math.random() * 15 + 10 + 'px'; // 10-25px
+            const left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 10 + 10 + 's'; // Slower: 10-20s
+
+            heart.style.fontSize = size;
+            heart.style.left = left;
+            heart.style.animationDuration = duration;
+            heart.style.opacity = Math.random() * 0.5 + 0.1; // Low opacity for ambient
+
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 20000);
+        }
+
+        // Helper for burst particles
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('particle');
+            heart.innerHTML = '✨'; 
+            heart.style.zIndex = "60";
+            
+            const size = Math.random() * 20 + 20 + 'px';
+            const left = Math.random() * 80 + 10 + 'vw'; // Center-ish
+            const duration = Math.random() * 2 + 1 + 's'; // Fast
+
+            heart.style.fontSize = size;
+            heart.style.left = left;
+            heart.style.bottom = "50%"; // Start from middle
+            heart.style.animationDuration = duration;
+
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
