@@ -46,18 +46,58 @@
             scroll-behavior: smooth;
         }
         
+        /* --- Scroll Magic Animations --- */
+        
+        /* 1. Basic Fade Up (Original) */
         .fade-in-section {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            will-change: opacity, visibility;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: opacity, transform;
         }
-        
         .fade-in-section.is-visible {
             opacity: 1;
-            transform: none;
+            transform: translateY(0);
         }
 
+        /* 2. Staggered Delay (ทำให้แต่ละก้อนโผล่ช้าเร็วไม่เท่ากัน) */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* 3. Golden Line Reveal (เส้นทองวิ่ง) */
+        .scroll-gold-line {
+            position: relative;
+            display: inline-block;
+        }
+        .scroll-gold-line::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%; /* เริ่มจากตรงกลาง */
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #FFD700, #B8860B, transparent);
+            transform: translateX(-50%);
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .scroll-gold-line.is-visible::after {
+            width: 120%; /* วิ่งยาวเกินตัวหนังสือหน่อย */
+        }
+
+        /* 4. Zoom Out Reveal (สำหรับรูปภาพ) */
+        .zoom-reveal {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1.2s ease-out;
+        }
+        .zoom-reveal.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- Existing Styles --- */
         .text-gold-gradient {
             background: linear-gradient(to right, #fbf5b7, #bf953f, #b38728, #fbf5b7);
             -webkit-background-clip: text;
@@ -71,10 +111,7 @@
             to { background-position: 200% center; }
         }
 
-        .fade-img {
-            transition: opacity 1s ease-in-out;
-        }
-
+        .fade-img { transition: opacity 1s ease-in-out; }
         .gold-glow-bar {
             height: 4px;
             background: linear-gradient(90deg, transparent, #FFD700, #FFF, #FFD700, transparent);
@@ -84,89 +121,43 @@
             box-shadow: 0 0 10px #FFD700, 0 0 20px #aa8c2c;
         }
 
-        /* --- 2. Full Screen Floating Hearts (Ambient) --- */
         .particle {
             position: fixed;
             bottom: -50px;
             pointer-events: none;
-            z-index: 5; /* อยู่หลังเนื้อหาหลักแต่อยู่หน้า background */
+            z-index: 5;
             animation: floatUp linear forwards;
             opacity: 0.7;
             text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(0) rotate(0deg) scale(0.5);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
             10% { opacity: 0.6; }
-            100% {
-                transform: translateY(-110vh) rotate(360deg) scale(1.2);
-                opacity: 0;
-            }
+            100% { transform: translateY(-110vh) rotate(360deg) scale(1.2); opacity: 0; }
         }
 
-        #loading-screen {
-            transition: opacity 0.8s ease-out, visibility 0.8s;
-        }
-        #loading-screen.hidden-loader {
-            opacity: 0;
-            visibility: hidden;
-        }
+        #loading-screen { transition: opacity 0.8s ease-out, visibility 0.8s; }
+        #loading-screen.hidden-loader { opacity: 0; visibility: hidden; }
 
-        /* --- 1. & 5. Blessing Pop & Gold Burst --- */
-        .blessing-animate {
-            animation: blessingPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            opacity: 0;
-        }
-        
+        .blessing-animate { animation: blessingPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; opacity: 0; }
         @keyframes blessingPop {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.6) translateY(40px);
-            }
-            100% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1) translateY(0);
-            }
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6) translateY(40px); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); }
         }
 
-        /* Effect ระเบิดแสงทอง */
         .gold-burst {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 0;
-            height: 0;
-            border-radius: 50%;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 0; height: 0; border-radius: 50%;
             box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
-            animation: burstEffect 0.8s ease-out forwards;
-            z-index: -1;
+            animation: burstEffect 0.8s ease-out forwards; z-index: -1;
         }
-
         @keyframes burstEffect {
-            0% {
-                width: 0;
-                height: 0;
-                box-shadow: 0 0 10px 10px rgba(255, 215, 0, 0.8), 0 0 20px 20px rgba(255, 223, 0, 0.4);
-                opacity: 1;
-            }
-            100% {
-                width: 500px;
-                height: 500px;
-                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
-                opacity: 0;
-            }
+            0% { width: 0; height: 0; box-shadow: 0 0 10px 10px rgba(255, 215, 0, 0.8), 0 0 20px 20px rgba(255, 223, 0, 0.4); opacity: 1; }
+            100% { width: 500px; height: 500px; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); opacity: 0; }
         }
 
-        /* Cursor สำหรับ Typewriter */
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s infinite;
-            color: #FFD700;
-        }
+        .typing-cursor::after { content: '|'; animation: blink 1s infinite; color: #FFD700; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
@@ -211,7 +202,6 @@
                 </div>
             </div>
             
-            <!-- ✅ 3. Typewriter Effect H1 -->
             <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-2 tracking-wide text-gold-gradient leading-tight drop-shadow-lg min-h-[1.2em]">
                 <span id="typewriter-line1"></span>
                 <br class="md:hidden" />
@@ -224,7 +214,6 @@
                 "ขอให้พ่อสุขภาพแข็งแรงไม่เจ็บไม่ป่วย ร่ำๆรวยๆ <br class="hidden md:block"/> และอยู่กับ พี่อ้อม, สาธุ, ภูผา ไปนานๆ นะครับ"
             </p>
 
-            <!-- ปุ่ม: สุ่มคำอวยพร -->
             <button onclick="generateRandomWish()" class="group relative px-8 py-4 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-full text-blue-900 font-bold text-lg shadow-[0_0_20px_rgba(234,179,8,0.5)] hover:shadow-[0_0_30px_rgba(234,179,8,0.8)] transition-all transform hover:-translate-y-1 active:scale-95">
                 <span class="flex items-center gap-2">
                     <i data-lucide="sparkles" class="w-6 h-6 fill-current animate-pulse"></i>
@@ -239,18 +228,22 @@
     </header>
 
     <section class="relative z-20 -mt-20 px-4 mb-20">
-        <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-8 md:p-12 text-center border-t-4 border-yellow-400 fade-in-section">
+        <!-- เพิ่ม class zoom-reveal เพื่อให้กล่องค่อยๆ ขยายออกมา -->
+        <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-8 md:p-12 text-center border-t-4 border-yellow-400 zoom-reveal">
             
+            <!-- เพิ่ม class fade-in-section ให้รูป -->
             <img src="image/f2.png" 
                  onerror="this.style.display='none'"
-                 class="w-32 h-32 mx-auto rounded-full shadow-md mb-6 object-cover border-2 border-yellow-200">
+                 class="w-32 h-32 mx-auto rounded-full shadow-md mb-6 object-cover border-2 border-yellow-200 fade-in-section">
 
             <div class="flex justify-center mb-6">
-                <div class="w-16 h-1 bg-yellow-400 rounded-full"></div>
+                <div class="w-16 h-1 bg-yellow-400 rounded-full fade-in-section delay-100"></div>
             </div>
-            <h2 class="text-3xl font-bold text-blue-900 mb-6">ถึง พ่อที่รัก</h2>
             
-            <div class="relative h-48 flex items-center justify-center overflow-hidden">
+            <!-- ✅ เพิ่ม class scroll-gold-line เพื่อให้เส้นทองวิ่งผ่าน -->
+            <h2 class="text-3xl font-bold text-blue-900 mb-6 scroll-gold-line fade-in-section delay-200">ถึง พ่อที่รัก</h2>
+            
+            <div class="relative h-48 flex items-center justify-center overflow-hidden fade-in-section delay-300">
                 <div class="greeting-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 opacity-100" id="slide-0">
                     <p class="text-gray-600 text-lg md:text-xl leading-loose italic">
                         "ขอบคุณพ่อที่คอยดูแลและสั่งสอนลูกเสมอมา <br> 
@@ -261,9 +254,8 @@
 
                 <div class="greeting-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 opacity-0" id="slide-1">
                     <p class="text-gray-600 text-lg md:text-xl leading-loose italic">
-                        "ขอให้พ่อสุขภาพแข็งแรงนะครับไม่เจ็บไม่ป่วย <br>
-                        ขอบคุณที่ดูแลผม และจ่ายค่าใช้จ่ายต่างๆ ให้ <br>
-                        ขอบคุณมากนะครับ"
+                        "ผมขอให้พ่อสุขภาพแข็งแรงนะครับ <br>
+                        อยู่กับผมไปนานๆ นะครับ"
                     </p>
                     <p class="text-blue-800 font-bold mt-4 text-lg">- จาก สาธุ -</p>
                 </div>
@@ -277,7 +269,7 @@
                 </div>
             </div>
 
-            <div class="mt-4 flex justify-center gap-2">
+            <div class="mt-4 flex justify-center gap-2 fade-in-section delay-300">
                 <span class="dot-indicator w-2 h-2 rounded-full bg-blue-400 transition-colors duration-300" id="dot-0"></span>
                 <span class="dot-indicator w-2 h-2 rounded-full bg-blue-200 transition-colors duration-300" id="dot-1"></span>
                 <span class="dot-indicator w-2 h-2 rounded-full bg-blue-200 transition-colors duration-300" id="dot-2"></span>
@@ -393,12 +385,14 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
+                    // ไม่ต้อง unobserve เพื่อให้ effect เล่นได้หลายทีถ้าเลื่อนขึ้นลง (หรือจะ unobserve ก็ได้ถ้าชอบเล่นทีเดียว)
+                    observer.unobserve(entry.target); 
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in-section').forEach(section => {
+        // รวม Selectors ใหม่ๆ เข้า Observer
+        document.querySelectorAll('.fade-in-section, .zoom-reveal, .scroll-gold-line').forEach(section => {
             observer.observe(section);
         });
 
